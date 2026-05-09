@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>내 식사 밸런스 분석하기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* ── 리셋 & 기본 ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:      #E31837;
+      --red-dark: #C0122C;
+      --red-soft: #FFF0F2;
+      --green:    #2A7F5F;
+      --green-soft:#EAF6F1;
+      --amber:    #F4A42A;
+      --amber-soft:#FFF8E8;
+      --navy:     #1A2B4A;
+      --gray-1:   #F7F8FA;
+      --gray-2:   #EDEFF2;
+      --gray-3:   #C8CDD6;
+      --gray-4:   #7C8494;
+      --text-main:#1A2B4A;
+      --text-sub: #6B7280;
+      --white:    #FFFFFF;
+      --shadow-sm:0 2px 8px rgba(0,0,0,.06);
+      --shadow-md:0 6px 24px rgba(0,0,0,.10);
+      --shadow-lg:0 12px 40px rgba(0,0,0,.14);
+      --radius-sm:10px;
+      --radius-md:18px;
+      --radius-lg:28px;
+      --font: 'Noto Sans KR', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--gray-1);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 앱 래퍼 ── */
+    #app {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── 화면 공통 ── */
+    .screen {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .screen.active {
+      display: flex;
+    }
+
+    /* ════════════════════════════════
+       START SCREEN
+    ════════════════════════════════ */
+    #screen-start {
+      background: var(--white);
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .start-hero {
+      background: linear-gradient(155deg, #1A2B4A 0%, #2A7F5F 100%);
+      padding: 28px 24px 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .start-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+    .start-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 50px;
+      padding: 5px 14px;
+      margin-bottom: 12px;
+    }
+    .brand-badge span {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,.9);
+      letter-spacing: .3px;
+    }
+    .brand-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .hero-icon {
+      font-size: 50px;
+      line-height: 1;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.25));
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,.75);
+      line-height: 1.5;
+      position: relative;
+      z-index: 1;
+    }
+
+    .start-body {
+      padding: 16px 20px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .info-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .info-card {
+      background: var(--gray-1);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      text-align: center;
+      border: 1.5px solid var(--gray-2);
+    }
+    .info-card .ic-icon { font-size: 22px; margin-bottom: 4px; }
+    .info-card .ic-label {
+      font-size: 11px;
+      color: var(--gray-4);
+      margin-bottom: 2px;
+      font-weight: 500;
+    }
+    .info-card .ic-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .start-notice {
+      background: var(--green-soft);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .notice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .notice-text {
+      font-size: 12.5px;
+      color: var(--green);
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .btn-start {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: 18px;
+      font-weight: 800;
+      font-family: var(--font);
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(227,24,55,.35);
+      transition: transform .18s, box-shadow .18s;
+      letter-spacing: -.2px;
+    }
+    .btn-start:active {
+      transform: scale(.97);
+      box-shadow: 0 4px 12px rgba(227,24,55,.3);
+    }
+
+    .start-legal {
+      text-align: center;
+      margin-top: 0;
+      font-size: 11px;
+      color: var(--gray-4);
+    }
+
+    /* ════════════════════════════════
+       QUESTION SCREEN
+    ════════════════════════════════ */
+    #screen-quiz {
+      background: var(--white);
+    }
+
+    .quiz-header {
+      padding: 20px 24px 0;
+    }
+
+    .quiz-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .btn-back {
+      background: var(--gray-1);
+      border: 1.5px solid var(--gray-2);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background .15s;
+    }
+    .btn-back:active { background: var(--gray-2); }
+
+    .quiz-counter {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .quiz-counter span { color: var(--red); font-size: 18px; }
+
+    .progress-track {
+      height: 6px;
+      background: var(--gray-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--red) 0%, var(--amber) 100%);
+      border-radius: 99px;
+      transition: width .45s cubic-bezier(.4,0,.2,1);
+    }
+
+    .quiz-body {
+      flex: 1;
+      padding: 40px 24px 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .question-number-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--red-soft);
+      border-radius: 50px;
+      padding: 5px 14px;
+      margin-bottom: 22px;
+      align-self: flex-start;
+    }
+    .question-number-badge span {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    .question-text {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.45;
+      color: var(--text-main);
+      flex: 1;
+      letter-spacing: -.4px;
+    }
+
+    .question-hint {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--gray-1);
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .answer-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 0 24px 48px;
+    }
+
+    .btn-answer {
+      padding: 22px 16px;
+      border: 2.5px solid var(--gray-2);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      font-family: var(--font);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all .2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-answer:active { transform: scale(.96); }
+
+    .btn-answer .ans-emoji { font-size: 34px; line-height: 1; }
+    .btn-answer .ans-label {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+    .btn-answer .ans-sub {
+      font-size: 12px;
+      color: var(--text-sub);
+      font-weight: 400;
+    }
+
+    .btn-yes {
+      border-color: #C8E6C9;
+      background: #F9FEF9;
+    }
+    .btn-yes .ans-label { color: #2E7D32; }
+    .btn-yes:hover, .btn-yes:focus {
+      border-color: #4CAF50;
+      background: #E8F5E9;
+      box-shadow: 0 6px 20px rgba(76,175,80,.2);
+    }
+
+    .btn-no {
+      border-color: #FFCCBC;
+      background: #FFFAF9;
+    }
+    .btn-no .ans-label { color: var(--red); }
+    .btn-no:hover, .btn-no:focus {
+      border-color: var(--red);
+      background: var(--red-soft);
+      box-shadow: 0 6px 20px rgba(227,24,55,.15);
+    }
+
+    /* ════════════════════════════════
+       LOADING SCREEN
+    ════════════════════════════════ */
+    #screen-loading {
+      background: linear-gradient(155deg, #1A2B4A 0%, #2A7F5F 100%);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .loading-anim {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px;
+      margin: 0 auto 32px;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: .8; }
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .loading-dots span {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.5);
+      animation: dot-bounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: .2s; }
+    .loading-dots span:nth-child(3) { animation-delay: .4s; }
+
+    @keyframes dot-bounce {
+      0%, 80%, 100% { transform: scale(.8); opacity: .5; }
+      40% { transform: scale(1.2); opacity: 1; background: var(--amber); }
+    }
+
+    .loading-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .loading-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,.65);
+    }
+
+    .loading-steps {
+      margin-top: 40px;
+      width: 100%;
+    }
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: rgba(255,255,255,.08);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all .5s ease;
+    }
+    .loading-step.show { opacity: 1; transform: translateY(0); }
+    .loading-step .step-icon { font-size: 20px; }
+    .loading-step .step-text {
+      font-size: 14px;
+      color: rgba(255,255,255,.85);
+      font-weight: 500;
+    }
+
+    /* ════════════════════════════════
+       RESULT SCREEN
+    ════════════════════════════════ */
+    #screen-result {
+      background: var(--gray-1);
+    }
+
+    .result-capture-area {
+      background: var(--white);
+    }
+
+    /* 결과 헤더 */
+    .result-header {
+      background: linear-gradient(155deg, #1A2B4A 0%, #2A7F5F 100%);
+      padding: 44px 28px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-header::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+
+    .result-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .result-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.45;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .result-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 추천 상품 카드 */
+    .result-product-wrap {
+      padding: 24px 20px 0;
+    }
+
+    .result-product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .product-image-area {
+      height: 260px;
+      background: #fff !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      padding: 12px;
+    }
+    .product-image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,.2));
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--red);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 50px;
+      letter-spacing: .3px;
+    }
+
+    .product-info {
+      padding: 22px 22px 24px;
+    }
+    .product-recommend-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .8px;
+      margin-bottom: 6px;
+    }
+    .product-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      letter-spacing: -.4px;
+    }
+    .product-desc {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .product-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .product-tag {
+      background: var(--green-soft);
+      border: 1px solid #B8E0D4;
+      border-radius: 50px;
+      padding: 5px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    /* 결과 섹션 공통 */
+    .result-section {
+      margin: 16px 20px 0;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1.5px solid var(--gray-2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-icon { font-size: 22px; }
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* 식습관 분석 */
+    .analysis-list {
+      padding: 16px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .analysis-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--gray-1);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--amber);
+    }
+    .analysis-item .ai-icon { font-size: 18px; flex-shrink: 0; }
+    .analysis-item .ai-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    /* 맞춤 코칭 */
+    .coaching-list {
+      padding: 16px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .coaching-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .coaching-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .coaching-text {
+      font-size: 14.5px;
+      color: var(--text-main);
+      line-height: 1.55;
+      font-weight: 400;
+      flex: 1;
+    }
+
+    /* 마무리 멘트 */
+    .result-closing {
+      margin: 16px 20px 0;
+      background: linear-gradient(135deg, var(--amber-soft) 0%, #FEF3D0 100%);
+      border-radius: var(--radius-md);
+      padding: 24px 22px;
+      text-align: center;
+      border: 1.5px solid #F7D98A;
+    }
+    .closing-emoji { font-size: 36px; margin-bottom: 12px; }
+    .closing-main {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .closing-sub {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* 액션 버튼 */
+    .result-actions {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-action:active { transform: scale(.97); }
+
+    .btn-capture {
+      background: linear-gradient(135deg, var(--navy) 0%, #2D4A7A 100%);
+      color: var(--white);
+      box-shadow: 0 6px 20px rgba(26,43,74,.3);
+    }
+
+    .btn-restart {
+      background: var(--white);
+      color: var(--red);
+      border: 2.5px solid var(--red);
+    }
+
+    .result-legal {
+      text-align: center;
+      padding: 0 20px 32px;
+      font-size: 11.5px;
+      color: var(--gray-4);
+      line-height: 1.6;
+    }
+
+    /* ── 상품 라인업 ── */
+    .product-lineup-section {
+      padding: 20px 20px 4px;
+    }
+    .lineup-section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lineup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .lineup-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 2px solid var(--gray-2);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all .2s;
+    }
+    .lineup-card.highlighted {
+      border-color: var(--red);
+      box-shadow: 0 4px 16px rgba(227,24,55,.25);
+    }
+    .lineup-card:active { transform: scale(.96); }
+    .lineup-recommended-badge {
+      width: 100%;
+      text-align: center;
+      background: var(--red);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 0;
+      letter-spacing: .3px;
+    }
+    .lineup-img-wrapper {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      position: relative;
+      overflow: hidden;
+    }
+    .lineup-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      position: absolute;
+      inset: 0;
+    }
+    .lineup-card-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      padding: 8px 6px 4px;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+    .lineup-buy-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      padding-bottom: 10px;
+      letter-spacing: .2px;
+    }
+
+    /* ── 구매 버튼 ── */
+    .btn-purchase {
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      color: var(--white) !important;
+      box-shadow: 0 8px 24px rgba(227,24,55,.38);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.2px;
+    }
+
+    /* ── 스크롤바 숨기기 ── */
+    ::-webkit-scrollbar { display: none; }
+
+    /* ── 반응형 ── */
+    @media (min-width: 480px) {
+      #app {
+        box-shadow: 0 0 60px rgba(0,0,0,.12);
+        min-height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ① 시작 화면 -->
+  <div id="screen-start" class="screen active">
+    <div class="start-hero">
+      <div class="brand-badge">
+        <div class="brand-dot"></div>
+        <span>식사 밸런스 분석</span>
+      </div>
+      <div class="hero-icon">🌾</div>
+      <h1 class="hero-title">내 식사 밸런스를<br><em>분석해드려요</em></h1>
+      <p class="hero-sub">몇 가지 질문으로<br>나에게 꼭 맞는 잡곡을 찾아드려요</p>
+    </div>
+
+    <div class="start-body">
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="ic-icon">❓</div>
+          <div class="ic-label">총 질문 수</div>
+          <div class="ic-value">12가지</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">⏱</div>
+          <div class="ic-label">소요 시간</div>
+          <div class="ic-value">약 2분</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🌿</div>
+          <div class="ic-label">추천 상품</div>
+          <div class="ic-value">5가지 유형</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">📋</div>
+          <div class="ic-label">분석 결과</div>
+          <div class="ic-value">맞춤 리포트</div>
+        </div>
+      </div>
+
+      <div class="start-notice">
+        <span class="notice-icon">💚</span>
+        <p class="notice-text">YES / NO 버튼만 누르시면 돼요.<br>어렵지 않아요, 편하게 시작하세요!</p>
+      </div>
+
+      <button class="btn-start" onclick="startQuiz()">분석 시작하기 →</button>
+      <p class="start-legal">본 테스트는 건강 참고용이며 의료적 진단이 아닙니다</p>
+    </div>
+  </div>
+
+  <!-- ② 질문 화면 -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <div class="quiz-topbar">
+        <button class="btn-back" onclick="goBack()">←</button>
+        <div class="quiz-counter">
+          <span id="current-q">1</span> / 12
+        </div>
+        <div style="width:40px"></div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:8.3%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-body">
+      <div class="question-number-badge">
+        <span id="q-badge">질문 1</span>
+      </div>
+      <p class="question-text" id="question-text">질문 로딩 중...</p>
+      <div class="question-hint" id="question-hint"></div>
+    </div>
+
+    <div class="answer-buttons">
+      <button class="btn-answer btn-yes" onclick="answer(true)">
+        <span class="ans-emoji">✅</span>
+        <span class="ans-label">YES</span>
+        <span class="ans-sub">그런 편이에요</span>
+      </button>
+      <button class="btn-answer btn-no" onclick="answer(false)">
+        <span class="ans-emoji">❌</span>
+        <span class="ans-label">NO</span>
+        <span class="ans-sub">그렇지 않아요</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ③ 로딩 화면 -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-anim">🌾</div>
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+    <p class="loading-title">분석 중이에요...</p>
+    <p class="loading-sub">답변을 바탕으로 식습관을 분석하고 있어요</p>
+    <div class="loading-steps">
+      <div class="loading-step" id="ls1">
+        <span class="step-icon">🔍</span>
+        <span class="step-text">식후 패턴 분석 중...</span>
+      </div>
+      <div class="loading-step" id="ls2">
+        <span class="step-icon">📊</span>
+        <span class="step-text">생활 습관 데이터 확인 중...</span>
+      </div>
+      <div class="loading-step" id="ls3">
+        <span class="step-icon">🌾</span>
+        <span class="step-text">맞춤 잡곡 추천 준비 중...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 결과 화면 -->
+  <div id="screen-result" class="screen">
+    <div class="result-capture-area" id="capture-area">
+
+      <div class="result-header">
+        <div class="result-label">ANALYSIS COMPLETE</div>
+        <h2 class="result-title">당신의 식사 밸런스를<br>분석했어요</h2>
+        <p class="result-sub" id="result-header-sub">현재 식습관 패턴을 보면 이런 특징이 보여요</p>
+      </div>
+
+      <!-- 추천 상품 카드 -->
+      <div class="result-product-wrap">
+        <div class="result-product-card">
+          <div class="product-image-area" id="product-image-area">
+            <div class="product-image-placeholder" id="product-emoji">🌾</div>
+            <div class="product-badge">맞춤 추천</div>
+          </div>
+          <div class="product-info">
+            <div class="product-recommend-label">✦ 추천 밸런스 잡곡</div>
+            <div class="product-name" id="product-name">상품명</div>
+            <div class="product-desc" id="product-desc">설명</div>
+            <div class="product-tags" id="product-tags"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 식습관 분석 -->
+      <div class="result-section">
+        <div class="section-header">
+          <span class="section-icon">📋</span>
+          <span class="section-title">식습관 분석 결과</span>
+        </div>
+        <div class="analysis-list" id="analysis-list"></div>
+      </div>
+
+      <!-- 맞춤 코칭 -->
+      <div class="result-section">
+        <div class="section-header">
+          <span class="section-icon">💡</span>
+          <span class="section-title">오늘부터 해보세요</span>
+        </div>
+        <div class="coaching-list" id="coaching-list"></div>
+      </div>
+
+    </div><!-- /capture-area -->
+
+    <!-- 액션 버튼 -->
+    <div class="result-actions">
+      <a class="btn-action btn-purchase" id="btn-purchase"
+         href="https://lottemartzetta.com" target="_blank">
+        🛒 추천 상품 구매하러 가기
+      </a>
+      <button class="btn-action btn-restart" onclick="restartQuiz()">
+        🔄 다시 분석하기
+      </button>
+    </div>
+    <p class="result-legal">
+      본 테스트는 건강 참고용이며 의료적 진단이 아닙니다.<br>
+      식습관 개선은 전문가와 상담 후 결정하세요.
+    </p>
+
+  </div><!-- /screen-result -->
+
+</div><!-- /app -->
+
+<script>
+/* ════════════════════════════════════
+   데이터 구성
+════════════════════════════════════ */
+
+const QUESTIONS = [
+  {
+    text: "밥 먹고 나면\n졸리신가요?",
+    hint: "식후에 눈이 무거워지거나 나른함이 느껴지시나요?",
+    scores: { diabetes: 3, digestive: 0, protein: 1, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "단 음식이\n자주 당기시나요?",
+    hint: "초콜릿, 과자, 음료 등 단 것이 자주 생각나시나요?",
+    scores: { diabetes: 3, digestive: 0, protein: 1, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "밀가루나 탄수화물을\n자주 드시나요?",
+    hint: "빵, 면, 떡, 흰쌀밥 등을 즐겨 드시나요?",
+    scores: { diabetes: 3, digestive: 1, protein: 0, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "식사 후 속이\n자주 더부룩하신가요?",
+    hint: "배가 빵빵하거나 소화가 잘 안 되는 느낌이 드시나요?",
+    scores: { diabetes: 0, digestive: 3, protein: 0, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "장 건강이\n신경 쓰이시나요?",
+    hint: "변비, 장 불편함 등 장 건강이 걱정되시나요?",
+    scores: { diabetes: 0, digestive: 3, protein: 0, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "채소를\n자주 못 드시나요?",
+    hint: "하루 식사에서 채소가 부족한 편이신가요?",
+    scores: { diabetes: 0, digestive: 3, protein: 1, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "쉽게 지치고\n활력이 부족하신가요?",
+    hint: "조금만 움직여도 피곤하거나 기운이 없으신가요?",
+    scores: { diabetes: 1, digestive: 0, protein: 3, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "아침에 일어나도\n피곤하신가요?",
+    hint: "충분히 자도 피곤함이 가시지 않으시나요?",
+    scores: { diabetes: 0, digestive: 0, protein: 3, hypertension: 0, farro: 0 }
+  },
+  {
+    text: "짠 음식이나\n국물을 좋아하시나요?",
+    hint: "찌개, 국, 짠 반찬 등을 즐겨 드시나요?",
+    scores: { diabetes: 0, digestive: 0, protein: 0, hypertension: 3, farro: 0 }
+  },
+  {
+    text: "몸이 자주\n붓는 느낌이 있으신가요?",
+    hint: "아침에 얼굴이나 손발이 자주 부으시나요?",
+    scores: { diabetes: 0, digestive: 0, protein: 0, hypertension: 3, farro: 0 }
+  },
+  {
+    text: "운동량이\n부족한 편이신가요?",
+    hint: "일주일에 운동을 거의 안 하시는 편인가요?",
+    scores: { diabetes: 0, digestive: 0, protein: 1, hypertension: 2, farro: 0 }
+  },
+  {
+    text: "식사가\n자주 불규칙하신가요?",
+    hint: "끼니를 자주 거르거나 식사 시간이 들쭉날쭉하신가요?",
+    scores: { diabetes: 1, digestive: 1, protein: 3, hypertension: 0, farro: 0 }
+  }
+];
+
+const PRODUCTS = {
+  diabetes: {
+    id: "diabetes",
+    name: "저당 밸런스 더 오색 현미",
+    subtitle: "혈당 밸런스 관리형",
+    emoji: "🌾",
+    gradient: "linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%)",
+    desc: "오색 현미와 천천히 소화되는 곡물 구성으로 식후 부담을 줄이고, 균형 잡힌 탄수화물 식습관을 돕습니다.",
+    tags: ["식후 부담 관리", "천천히 소화", "오색 현미"],
+    url: "https://lottemartzetta.com/products/OS8809191315502/details",
+    lineupKey: "diabetes",
+    image: "img-diabetes.png"
+  },
+  digestive: {
+    id: "digestive",
+    name: "속편한 밸런스 숙성 찰진8곡",
+    subtitle: "소화 편안함 관리형",
+    emoji: "🫙",
+    gradient: "linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%)",
+    desc: "발효 숙성 8곡으로 구성되어 편안한 식사 습관을 만들어드립니다. 찰진 식감과 부담 없는 구성이 특징입니다.",
+    tags: ["편안한 식사 습관", "발효 숙성 8곡", "찰진 식감"],
+    url: "https://lottemartzetta.com/products/OS8809191315526/details",
+    lineupKey: "digestive",
+    image: "img-digestive.png"
+  },
+  protein: {
+    id: "protein",
+    name: "프로틴 밸런스 더 고단백 11곡",
+    subtitle: "활력 에너지 관리형",
+    emoji: "💪",
+    gradient: "linear-gradient(135deg, #FFF8E1 0%, #FFE082 100%)",
+    desc: "11가지 곡물로 단백질 균형을 맞춰 활력 있는 하루를 도와드립니다. 든든하고 균형 잡힌 식사를 경험하세요.",
+    tags: ["단백질 균형", "고단백 11곡", "든든한 식사"],
+    url: "https://lottemartzetta.com/products/OS8809191315496/details",
+    lineupKey: "protein",
+    image: "img-protein.png"
+  },
+  hypertension: {
+    id: "hypertension",
+    name: "저당 밸런스 더 오색 현미",
+    subtitle: "나트륨 밸런스 관리형",
+    emoji: "🌾",
+    gradient: "linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%)",
+    desc: "가벼운 오색 현미 구성으로 나트륨 밸런스를 도와드립니다. 부담 없는 하루를 위한 맞춤 곡물입니다.",
+    tags: ["나트륨 밸런스", "가벼운 식습관", "오색 현미"],
+    url: "https://lottemartzetta.com/products/OS8809191315502/details",
+    lineupKey: "diabetes",
+    image: "img-diabetes.png"
+  },
+  farro: {
+    id: "farro",
+    name: "속편한 밸런스 숙성 찰진8곡",
+    subtitle: "전체 균형형",
+    emoji: "🫙",
+    gradient: "linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%)",
+    desc: "발효 숙성 8곡의 영양을 균형 있게 담았습니다. 전체적인 건강한 식사 습관을 원하시는 분께 추천드립니다.",
+    tags: ["전체 균형", "발효 숙성 8곡", "건강한 식습관"],
+    url: "https://lottemartzetta.com/products/OS8809191315526/details",
+    lineupKey: "digestive",
+    image: "img-digestive.png"
+  }
+};
+
+// 분석 문구 (질문 인덱스 → YES일 때 표시)
+const ANALYSIS_MAP = [
+  { q: 0,  text: "식후 피로 패턴이 보여요", icon: "😴" },
+  { q: 1,  text: "단 음식 선호 경향이 있어요", icon: "🍬" },
+  { q: 2,  text: "탄수화물 섭취 비중이 높아 보여요", icon: "🍚" },
+  { q: 3,  text: "소화 부담이 느껴지는 편이에요", icon: "😣" },
+  { q: 4,  text: "장 건강 관리가 필요해 보여요", icon: "💚" },
+  { q: 5,  text: "채소 섭취가 부족한 편이에요", icon: "🥦" },
+  { q: 6,  text: "전반적인 활력이 부족해 보여요", icon: "⚡" },
+  { q: 7,  text: "수면 후 피로 회복이 더딘 편이에요", icon: "🌙" },
+  { q: 8,  text: "짠 음식 섭취 빈도가 높아 보여요", icon: "🧂" },
+  { q: 9,  text: "부기 관리가 필요해 보여요", icon: "💧" },
+  { q: 10, text: "생활 활동량이 적은 편이에요", icon: "🚶" },
+  { q: 11, text: "생활 리듬이 불규칙한 편이에요", icon: "🕐" }
+];
+
+// 코칭 문구 (상품별)
+const COACHING_MAP = {
+  diabetes: [
+    "흰쌀밥 대신 잡곡밥 비율 조금씩 늘려보세요",
+    "단 음료 대신 물이나 따뜻한 차를 드셔보세요",
+    "채소나 단백질을 먼저 먹는 식사 순서 바꿔보기",
+    "간식은 과일이나 견과류 위주로 선택해보세요",
+    "천천히 꼭꼭 씹어 먹는 습관을 만들어보세요"
+  ],
+  digestive: [
+    "식사 후 가벼운 산책 10분을 실천해보세요",
+    "채소 반찬을 매 끼니 한 가지씩 추가해보세요",
+    "기름진 음식과 인스턴트는 조금씩 줄여보세요",
+    "발효 식품(김치, 된장 등)을 꾸준히 드셔보세요",
+    "물을 하루 6~8잔 충분히 마셔보세요"
+  ],
+  protein: [
+    "아침 식사를 거르지 않는 습관을 만들어보세요",
+    "두부, 달걀, 생선 등 단백질 식품을 매끼 챙겨보세요",
+    "규칙적인 식사 시간을 정해서 지켜보세요",
+    "가벼운 스트레칭이나 산책을 하루 20분씩 해보세요",
+    "잡곡밥으로 든든한 에너지를 보충해보세요"
+  ],
+  hypertension: [
+    "국물 음식을 드실 때 건더기 위주로 드셔보세요",
+    "소금 대신 레몬즙이나 식초로 맛을 내보세요",
+    "가공식품, 통조림 등 나트륨 높은 식품을 줄여보세요",
+    "하루 30분 이상 가벼운 걷기를 실천해보세요",
+    "물을 충분히 마셔 나트륨 배출을 도와주세요"
+  ],
+  farro: [
+    "다양한 색깔의 채소를 골고루 드셔보세요",
+    "규칙적인 식사 시간으로 생활 리듬을 만들어보세요",
+    "가공식품보다 자연식품 위주의 식단을 유지해보세요",
+    "흰쌀밥에 잡곡을 조금씩 섞어 드셔보세요",
+    "즐거운 식사 습관으로 건강한 하루를 시작해보세요"
+  ]
+};
+
+/* ════════════════════════════════════
+   상태 관리
+════════════════════════════════════ */
+let currentQ = 0;
+let answers = [];
+let scores = { diabetes: 0, digestive: 0, protein: 0, hypertension: 0, farro: 0 };
+
+/* ════════════════════════════════════
+   화면 전환
+════════════════════════════════════ */
+function showScreen(targetId, fromId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(targetId);
+
+  if (from) {
+    from.style.transition = 'opacity .3s ease, transform .3s ease';
+    from.style.opacity = '0';
+    from.style.transform = 'translateX(-30px)';
+    setTimeout(() => {
+      from.classList.remove('active');
+      from.style.cssText = '';
+    }, 320);
+  }
+
+  if (to) {
+    to.classList.add('active');
+    to.style.transition = 'none';
+    to.style.opacity = '0';
+    to.style.transform = 'translateX(30px)';
+    to.getBoundingClientRect(); // reflow 강제
+    requestAnimationFrame(() => {
+      to.style.transition = 'opacity .38s ease, transform .38s ease';
+      to.style.opacity = '1';
+      to.style.transform = 'translateX(0)';
+    });
+  }
+}
+
+/* ════════════════════════════════════
+   퀴즈 시작
+════════════════════════════════════ */
+function startQuiz() {
+  currentQ = 0;
+  answers = [];
+  scores = { diabetes: 0, digestive: 0, protein: 0, hypertension: 0, farro: 0 };
+  renderQuestion();
+  showScreen('screen-quiz', 'screen-start');
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  document.getElementById('current-q').textContent = currentQ + 1;
+  document.getElementById('q-badge').textContent = `질문 ${currentQ + 1}`;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('question-hint').textContent = q.hint;
+  const pct = ((currentQ + 1) / QUESTIONS.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+/* ════════════════════════════════════
+   답변 처리
+════════════════════════════════════ */
+function answer(isYes) {
+  answers.push(isYes);
+
+  if (isYes) {
+    const q = QUESTIONS[currentQ];
+    Object.keys(q.scores).forEach(key => {
+      scores[key] += q.scores[key];
+    });
+  }
+
+  // 다음 질문 또는 결과
+  const buttons = document.querySelectorAll('.btn-answer');
+  buttons.forEach(b => { b.style.pointerEvents = 'none'; });
+
+  setTimeout(() => {
+    buttons.forEach(b => { b.style.pointerEvents = ''; });
+    if (currentQ < QUESTIONS.length - 1) {
+      currentQ++;
+      // 슬라이드 애니메이션
+      const body = document.querySelector('.quiz-body');
+      body.style.opacity = '0';
+      body.style.transform = 'translateX(-20px)';
+      body.style.transition = 'all .2s ease';
+      setTimeout(() => {
+        renderQuestion();
+        body.style.transform = 'translateX(20px)';
+        body.style.opacity = '0';
+        setTimeout(() => {
+          body.style.transition = 'all .3s ease';
+          body.style.transform = 'translateX(0)';
+          body.style.opacity = '1';
+        }, 50);
+      }, 200);
+    } else {
+      showLoading();
+    }
+  }, 200);
+}
+
+/* ════════════════════════════════════
+   뒤로 가기
+════════════════════════════════════ */
+function goBack() {
+  if (currentQ === 0) {
+    showScreen('screen-start', 'screen-quiz');
+    return;
+  }
+  currentQ--;
+  const lastAnswer = answers.pop();
+  if (lastAnswer) {
+    const q = QUESTIONS[currentQ];
+    Object.keys(q.scores).forEach(key => {
+      scores[key] -= q.scores[key];
+    });
+  }
+  renderQuestion();
+}
+
+/* ════════════════════════════════════
+   로딩 → 결과
+════════════════════════════════════ */
+function showLoading() {
+  showScreen('screen-loading', 'screen-quiz');
+  // 단계별 표시
+  setTimeout(() => document.getElementById('ls1').classList.add('show'), 300);
+  setTimeout(() => document.getElementById('ls2').classList.add('show'), 900);
+  setTimeout(() => document.getElementById('ls3').classList.add('show'), 1500);
+  setTimeout(() => showResult(), 2800);
+}
+
+/* ════════════════════════════════════
+   결과 계산 및 표시
+════════════════════════════════════ */
+function showResult() {
+  const yesCount = answers.filter(Boolean).length;
+  let recommended = 'farro';
+
+  if (yesCount >= 3) {
+    // 가장 높은 점수 상품 찾기
+    let maxScore = 0;
+    Object.entries(scores).forEach(([key, val]) => {
+      if (key !== 'farro' && val > maxScore) {
+        maxScore = val;
+        recommended = key;
+      }
+    });
+    // 동점 처리 (동점 시 균형형)
+    const topScore = scores[recommended];
+    const ties = Object.entries(scores).filter(([k, v]) => k !== 'farro' && v === topScore);
+    if (ties.length > 1) recommended = 'farro';
+  }
+
+  const prod = PRODUCTS[recommended];
+
+  // 상품 이미지 렌더
+  const imgArea = document.getElementById('product-image-area');
+  imgArea.style.background = '#ffffff';
+  imgArea.innerHTML = `
+    <img src="${prod.image}" alt="${prod.name}"
+         style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:16px;"
+         onerror="this.style.display='none';document.getElementById('product-emoji-fb').style.display='flex'">
+    <div id="product-emoji-fb" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:80px;background:${prod.gradient}">${prod.emoji}</div>
+    <div class="product-badge">맞춤 추천</div>
+  `;
+
+  document.getElementById('product-name').textContent = prod.name;
+  document.getElementById('product-desc').textContent = prod.desc;
+
+  const tagsEl = document.getElementById('product-tags');
+  tagsEl.innerHTML = prod.tags.map(t => `<span class="product-tag"># ${t}</span>`).join('');
+
+  // 식습관 분석 렌더
+  const analysisList = document.getElementById('analysis-list');
+  const yesItems = ANALYSIS_MAP.filter(a => answers[a.q] === true);
+  if (yesItems.length === 0) {
+    analysisList.innerHTML = '<div class="analysis-item"><span class="ai-icon">✨</span><span class="ai-text">전반적으로 균형 잡힌 식습관을 유지하고 계세요!</span></div>';
+  } else {
+    analysisList.innerHTML = yesItems.slice(0, 5).map(a =>
+      `<div class="analysis-item"><span class="ai-icon">${a.icon}</span><span class="ai-text">${a.text}</span></div>`
+    ).join('');
+  }
+
+  // 코칭 렌더
+  const coachingList = document.getElementById('coaching-list');
+  const tips = COACHING_MAP[recommended].slice(0, 3);
+  coachingList.innerHTML = tips.map((tip, i) =>
+    `<div class="coaching-item"><div class="coaching-num">${i + 1}</div><div class="coaching-text">${tip}</div></div>`
+  ).join('');
+
+  // 구매 버튼 URL 설정
+  const buyBtn = document.getElementById('btn-purchase');
+  buyBtn.href = prod.url || 'https://lottemartzetta.com';
+
+  // 라인업 하이라이트 초기화
+  ['protein', 'digestive', 'diabetes'].forEach(key => {
+    const card = document.getElementById('lineup-' + key);
+    const badge = document.getElementById('badge-' + key);
+    if (card) card.classList.remove('highlighted');
+    if (badge) badge.style.display = 'none';
+  });
+
+  // 추천 상품 라인업 카드 강조
+  const lineupKey = prod.lineupKey;
+  if (lineupKey) {
+    const card = document.getElementById('lineup-' + lineupKey);
+    const badge = document.getElementById('badge-' + lineupKey);
+    if (card) card.classList.add('highlighted');
+    if (badge) badge.style.display = 'block';
+  }
+
+  // 로딩 초기화
+  document.getElementById('ls1').classList.remove('show');
+  document.getElementById('ls2').classList.remove('show');
+  document.getElementById('ls3').classList.remove('show');
+
+  showScreen('screen-result', 'screen-loading');
+
+  // 결과 화면 스크롤 상단
+  setTimeout(() => {
+    document.getElementById('screen-result').scrollTop = 0;
+    window.scrollTo(0, 0);
+  }, 400);
+}
+
+/* ════════════════════════════════════
+   결과 캡처
+════════════════════════════════════ */
+function captureResult() {
+  const btn = document.querySelector('.btn-capture');
+  btn.textContent = '📸 저장 중...';
+  btn.disabled = true;
+
+  const area = document.getElementById('capture-area');
+  html2canvas(area, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = '식사밸런스_분석결과.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent = '✅ 저장 완료!';
+    setTimeout(() => {
+      btn.textContent = '📸 결과 이미지로 저장하기';
+      btn.disabled = false;
+    }, 2000);
+  }).catch(() => {
+    btn.textContent = '📸 결과 이미지로 저장하기';
+    btn.disabled = false;
+    alert('저장에 실패했습니다. 화면을 스크린샷으로 저장해주세요.');
+  });
+}
+
+/* ════════════════════════════════════
+   다시 시작
+════════════════════════════════════ */
+function restartQuiz() {
+  showScreen('screen-start', 'screen-result');
+}
+</script>
+</body>
+</html>
