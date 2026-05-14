@@ -1389,9 +1389,10 @@ function showResult() {
 
   // 식습관 분석
   const positiveItems = ANALYSIS_MAP.filter(a => answers[a.q] !== undefined && answers[a.q] <= 1);
+  const toItem = text => `<div class="recommend-item"><div class="recommend-dot"></div><span>${text}</span></div>`;
   document.getElementById('analysis-list').innerHTML = positiveItems.length === 0
-    ? '<div class="analysis-item">전반적으로 균형 잡힌 식습관을 유지하고 계세요</div>'
-    : positiveItems.slice(0, 5).map(a => `<div class="analysis-item">${a.text}</div>`).join('');
+    ? toItem('전반적으로 균형 잡힌 식습관을 유지하고 계세요')
+    : positiveItems.slice(0, 5).map(a => toItem(a.text)).join('');
 
   // 구매 버튼
   document.getElementById('btn-purchase').href = prod.url;
