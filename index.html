@@ -4,37 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>나에게 맞는 건강 잡곡 찾기</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green-dark:   #2D5A27;
-      --green-deeper: #1E3D1A;
-      --green-mid:    #4E8B3E;
-      --green-light:  #7AB568;
-      --green-soft:   #F0F5EE;
-      --green-border: #C8DAC1;
-      --text-main:    #1A2A16;
-      --text-sub:     #5A6E55;
-      --text-gray:    #8A9985;
-      --white:        #FFFFFF;
-      --gray-bg:      #F7F8F5;
-      --gray-line:    #E5EAE3;
-      --shadow-sm:    0 2px 8px rgba(0,0,0,.05);
-      --shadow-md:    0 6px 24px rgba(0,0,0,.08);
-      --radius-sm:    10px;
-      --radius-md:    16px;
-      --radius-lg:    24px;
-      --font-head:    'Pretendard', 'Noto Sans KR', sans-serif;
-      --font-body:    'Noto Sans KR', sans-serif;
+      --orange:        #E8742A;
+      --orange-hover:  #D46520;
+      --orange-light:  #F5A04A;
+      --orange-soft:   #FFF4EC;
+      --orange-border: #F5C9A0;
+      --beige:         #FAF6F0;
+      --beige-dark:    #F0E8DC;
+      --text-main:     #1A1A1A;
+      --text-sub:      #666666;
+      --text-gray:     #999999;
+      --white:         #FFFFFF;
+      --gray-line:     #EBEBEB;
+      --shadow-sm:     0 2px 8px rgba(0,0,0,.06);
+      --shadow-md:     0 6px 28px rgba(0,0,0,.10);
+      --radius-sm:     10px;
+      --radius-md:     16px;
+      --radius-lg:     24px;
+      --font:          'Noto Sans KR', sans-serif;
     }
 
     html, body {
       height: 100%;
-      font-family: var(--font-body);
-      background: var(--gray-bg);
+      font-family: var(--font);
+      background: var(--beige);
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
     }
@@ -48,30 +46,22 @@
       overflow-x: hidden;
     }
 
-    .screen {
-      display: none;
-      width: 100%;
-      min-height: 100vh;
-      flex-direction: column;
-    }
+    .screen { display: none; width: 100%; min-height: 100vh; flex-direction: column; }
     .screen.active { display: flex; }
+    #screen-result { overflow-y: auto; min-height: 100vh; }
 
-    #screen-result {
-      overflow-y: auto;
-      min-height: 100vh;
-    }
-
-    /* ════════════════════════════════
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━
        START SCREEN
-    ════════════════════════════════ */
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     #screen-start {
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
+      background: var(--beige);
     }
 
     .start-hero {
-      background: linear-gradient(160deg, var(--green-deeper) 0%, var(--green-dark) 55%, var(--green-mid) 100%);
+      background: linear-gradient(155deg, #3D1F0A 0%, #7A3D14 50%, #C06020 100%);
       padding: 56px 28px 48px;
       position: relative;
       overflow: hidden;
@@ -83,7 +73,7 @@
       top: -80px; right: -80px;
       width: 260px; height: 260px;
       border-radius: 50%;
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.06);
     }
     .start-hero::after {
       content: '';
@@ -95,17 +85,15 @@
     }
 
     .brand-label {
-      font-family: var(--font-head);
       font-size: 11px;
       font-weight: 600;
-      color: rgba(255,255,255,.6);
+      color: rgba(255,255,255,.55);
       letter-spacing: 2px;
       text-transform: uppercase;
       margin-bottom: 20px;
     }
 
     .hero-title {
-      font-family: var(--font-head);
       font-size: 30px;
       font-weight: 700;
       color: var(--white);
@@ -117,7 +105,7 @@
     }
     .hero-title em {
       font-style: normal;
-      color: #A8D99C;
+      color: #FFB870;
     }
 
     .hero-sub {
@@ -126,25 +114,6 @@
       line-height: 1.65;
       position: relative;
       z-index: 1;
-    }
-
-    .hero-deco {
-      position: absolute;
-      right: 24px;
-      bottom: 24px;
-      z-index: 1;
-    }
-    .hero-deco-circle {
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,.15);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .hero-deco-inner {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
     }
 
     .start-body {
@@ -160,6 +129,7 @@
       border: 1.5px solid var(--gray-line);
       border-radius: var(--radius-md);
       overflow: hidden;
+      background: var(--white);
     }
     .feature-item {
       display: flex;
@@ -172,30 +142,24 @@
     .feature-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: var(--green-dark);
+      background: var(--orange);
       flex-shrink: 0;
     }
-    .feature-text {
-      font-size: 14px;
-      color: var(--text-main);
-      font-weight: 500;
-    }
+    .feature-text { font-size: 14px; color: var(--text-main); font-weight: 500; }
 
     .btn-start {
       width: 100%;
       padding: 18px;
-      background: var(--green-dark);
+      background: var(--orange);
       color: var(--white);
       border: none;
       border-radius: var(--radius-md);
-      font-family: var(--font-head);
       font-size: 17px;
       font-weight: 700;
       cursor: pointer;
-      letter-spacing: -.1px;
       transition: background .18s, transform .18s;
     }
-    .btn-start:active { transform: scale(.97); background: var(--green-deeper); }
+    .btn-start:active { transform: scale(.97); background: var(--orange-hover); }
 
     .start-legal {
       text-align: center;
@@ -204,13 +168,10 @@
       margin-top: -6px;
     }
 
-    /* ════════════════════════════════
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━
        QUIZ SCREEN
-    ════════════════════════════════ */
-    #screen-quiz {
-      background: var(--white);
-      overflow-y: auto;
-    }
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #screen-quiz { background: var(--white); overflow-y: auto; }
 
     .quiz-topbar {
       display: flex;
@@ -229,54 +190,40 @@
       color: var(--text-main);
       transition: background .15s;
     }
-    .btn-back:active { background: var(--gray-bg); }
+    .btn-back:active { background: var(--beige); }
 
-    .quiz-counter {
-      font-family: var(--font-head);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-gray);
-    }
-    .quiz-counter strong {
-      color: var(--green-dark);
-      font-size: 16px;
-    }
+    .quiz-counter { font-size: 14px; font-weight: 600; color: var(--text-gray); }
+    .quiz-counter strong { color: var(--orange); font-size: 16px; }
 
-    .progress-wrap {
-      padding: 0 20px;
-    }
+    .progress-wrap { padding: 0 20px; }
     .progress-track {
-      height: 3px;
+      height: 4px;
       background: var(--gray-line);
       border-radius: 99px;
       overflow: hidden;
     }
     .progress-fill {
       height: 100%;
-      background: var(--green-dark);
+      background: var(--orange);
       border-radius: 99px;
       transition: width .45s cubic-bezier(.4,0,.2,1);
     }
 
-    .quiz-body {
-      padding: 28px 20px 20px;
-    }
+    .quiz-body { padding: 28px 20px 20px; }
 
     .category-badge {
       display: inline-block;
-      background: var(--green-soft);
-      border: 1px solid var(--green-border);
+      background: var(--orange-soft);
+      border: 1px solid var(--orange-border);
       border-radius: 50px;
       padding: 5px 14px;
-      font-family: var(--font-head);
       font-size: 12px;
       font-weight: 600;
-      color: var(--green-dark);
+      color: var(--orange);
       margin-bottom: 18px;
     }
 
     .question-text {
-      font-family: var(--font-head);
       font-size: 26px;
       font-weight: 700;
       line-height: 1.4;
@@ -285,12 +232,7 @@
       letter-spacing: -.5px;
       white-space: pre-line;
     }
-
-    .question-hint {
-      font-size: 14px;
-      color: var(--text-gray);
-      line-height: 1.65;
-    }
+    .question-hint { font-size: 14px; color: var(--text-gray); line-height: 1.65; }
 
     .answer-list {
       padding: 20px 20px 0;
@@ -305,7 +247,6 @@
       border: 1.5px solid var(--gray-line);
       border-radius: var(--radius-md);
       background: var(--white);
-      font-family: var(--font-body);
       font-size: 15px;
       font-weight: 500;
       color: var(--text-main);
@@ -316,14 +257,11 @@
       transition: all .18s ease;
       text-align: left;
     }
-    .btn-answer:hover {
-      border-color: var(--green-border);
-      background: var(--green-soft);
-    }
+    .btn-answer:hover { border-color: var(--orange-border); background: var(--orange-soft); }
     .btn-answer.selected {
-      border-color: var(--green-dark);
-      background: var(--green-soft);
-      color: var(--green-dark);
+      border-color: var(--orange);
+      background: var(--orange-soft);
+      color: var(--orange);
       font-weight: 700;
     }
     .check-circle {
@@ -334,29 +272,18 @@
       flex-shrink: 0;
       transition: all .18s;
     }
-    .btn-answer.selected .check-circle {
-      border-color: var(--green-dark);
-      background: var(--green-dark);
-    }
-    .check-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--white);
-      display: none;
-    }
+    .btn-answer.selected .check-circle { border-color: var(--orange); background: var(--orange); }
+    .check-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--white); display: none; }
     .btn-answer.selected .check-dot { display: block; }
 
-    .quiz-footer {
-      padding: 20px 20px 40px;
-    }
+    .quiz-footer { padding: 20px 20px 40px; }
     .btn-next {
       width: 100%;
       padding: 17px;
-      background: var(--green-dark);
+      background: var(--orange);
       color: var(--white);
       border: none;
       border-radius: var(--radius-md);
-      font-family: var(--font-head);
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
@@ -364,17 +291,14 @@
       pointer-events: none;
       transition: opacity .2s, transform .18s;
     }
-    .btn-next.enabled {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .btn-next.enabled { opacity: 1; pointer-events: auto; }
     .btn-next.enabled:active { transform: scale(.97); }
 
-    /* ════════════════════════════════
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━
        LOADING SCREEN
-    ════════════════════════════════ */
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     #screen-loading {
-      background: linear-gradient(160deg, var(--green-deeper) 0%, var(--green-dark) 55%, var(--green-mid) 100%);
+      background: linear-gradient(155deg, #3D1F0A 0%, #7A3D14 50%, #C06020 100%);
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -391,12 +315,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .loading-dots {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
+    .loading-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; }
     .loading-dots span {
       width: 9px; height: 9px;
       border-radius: 50%;
@@ -410,25 +329,10 @@
       40% { transform: scale(1.2); opacity: 1; background: rgba(255,255,255,.9); }
     }
 
-    .loading-title {
-      font-family: var(--font-head);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 8px;
-    }
-    .loading-sub {
-      font-size: 14px;
-      color: rgba(255,255,255,.6);
-      margin-bottom: 40px;
-    }
+    .loading-title { font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+    .loading-sub { font-size: 14px; color: rgba(255,255,255,.6); margin-bottom: 40px; }
 
-    .loading-steps {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .loading-steps { width: 100%; display: flex; flex-direction: column; gap: 8px; }
     .loading-step {
       padding: 14px 18px;
       background: rgba(255,255,255,.08);
@@ -443,359 +347,327 @@
     }
     .loading-step.show { opacity: 1; transform: translateY(0); }
 
-    /* ════════════════════════════════
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━
        RESULT SCREEN
-    ════════════════════════════════ */
-    .result-header {
-      background: linear-gradient(160deg, var(--green-deeper) 0%, var(--green-dark) 55%, var(--green-mid) 100%);
-      padding: 52px 28px 40px;
-      position: relative;
-      overflow: hidden;
-    }
-    .result-header::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.05);
-    }
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-    .result-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: rgba(255,255,255,.55);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .result-type-chip {
-      display: inline-block;
-      background: rgba(255,255,255,.15);
-      border: 1px solid rgba(255,255,255,.3);
-      border-radius: 50px;
-      padding: 5px 16px;
-      font-family: var(--font-head);
-      font-size: 12px;
-      font-weight: 700;
-      color: rgba(255,255,255,.95);
-      margin-bottom: 14px;
-      letter-spacing: .3px;
-    }
-
-    .result-title {
-      font-family: var(--font-head);
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.4;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-      letter-spacing: -.4px;
-    }
-    .result-title em {
-      font-style: normal;
-      color: #A8D99C;
-    }
-
-    .result-sub {
-      font-size: 14px;
-      color: rgba(255,255,255,.65);
-      position: relative;
-      z-index: 1;
-      line-height: 1.6;
-    }
-
-    /* 추천 상품 카드 */
-    .result-card-wrap {
-      padding: 20px 16px 0;
-    }
-    .result-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-    }
-
-    .product-image-area {
-      height: 240px;
-      background: var(--white);
+    /* 상단 네비 */
+    .result-nav {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    .product-image-area img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 20px;
-      mix-blend-mode: multiply;
-    }
-    .product-img-fallback {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--green-soft);
-    }
-    .product-img-fallback span {
-      font-family: var(--font-head);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--green-dark);
-      opacity: .5;
-    }
-
-    .product-badge {
-      position: absolute;
-      top: 14px; left: 14px;
-      background: var(--green-dark);
-      color: var(--white);
-      font-family: var(--font-head);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 50px;
-      letter-spacing: .3px;
-    }
-
-    .product-info {
-      padding: 20px 20px 0;
-    }
-    .product-name {
-      font-family: var(--font-head);
-      font-size: 20px;
+    .result-nav-title {
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 12px;
-      letter-spacing: -.3px;
     }
-    .product-tags {
+    .btn-back-result {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gray-line);
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-main);
+    }
+
+    /* 히어로 */
+    .result-hero {
+      background: var(--beige);
+      padding: 32px 24px 28px;
+      text-align: center;
+    }
+    .result-check-wrap {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+      justify-content: center;
       margin-bottom: 20px;
     }
-    .product-tag {
-      background: var(--green-soft);
-      border: 1px solid var(--green-border);
-      border-radius: 50px;
-      padding: 4px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--green-dark);
+    .result-check-circle {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      color: var(--white);
     }
-
-    /* 영양 포인트 */
-    .nutrition-section {
-      padding: 0 20px 20px;
-      border-bottom: 1px solid var(--gray-line);
-    }
-    .section-label {
-      font-family: var(--font-head);
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-gray);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .nutrition-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .np-card {
-      background: var(--green-soft);
-      border: 1px solid var(--green-border);
-      border-radius: var(--radius-sm);
-      padding: 13px 14px;
-    }
-    .np-title {
-      font-family: var(--font-head);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--green-dark);
-      margin-bottom: 4px;
-    }
-    .np-sub {
-      font-size: 11.5px;
-      color: var(--text-sub);
-      line-height: 1.5;
-    }
-
-    /* 식습관 분석 그래프 */
-    .graph-section {
-      padding: 20px 20px 22px;
-      border-bottom: 1px solid var(--gray-line);
-    }
-    .graph-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .graph-item:last-child { margin-bottom: 0; }
-    .graph-icon {
-      font-size: 16px;
-      width: 22px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-    .graph-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-main);
-      width: 80px;
-      flex-shrink: 0;
-      line-height: 1.3;
-    }
-    .graph-bar-wrap {
-      flex: 1;
-      height: 8px;
-      background: var(--gray-line);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .graph-bar-fill {
-      height: 100%;
-      background: var(--green-dark);
-      border-radius: 99px;
-      width: 0%;
-      transition: width .9s cubic-bezier(.4,0,.2,1);
-    }
-    .graph-pct {
-      font-family: var(--font-head);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--green-dark);
-      width: 32px;
-      text-align: right;
-      flex-shrink: 0;
-    }
-
-    /* 아코디언 */
-    .accordion {
-      border-top: 1px solid var(--gray-line);
-    }
-    .accordion-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 17px 20px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .accordion-title {
-      font-family: var(--font-head);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-    .accordion-arrow {
-      font-size: 11px;
-      color: var(--text-gray);
-      transition: transform .3s ease;
-      font-weight: 400;
-    }
-    .accordion-header.open .accordion-arrow {
-      transform: rotate(180deg);
-    }
-    .accordion-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .4s ease;
-    }
-    .accordion-body.open {
-      max-height: 500px;
-    }
-    .accordion-content {
-      padding: 0 20px 20px;
-    }
-    .recommend-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .recommend-item {
+    .result-hero-heading {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 12px;
     }
-    .recommend-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--green-mid);
+    .sparkle {
+      font-size: 18px;
+      color: var(--orange-light);
       flex-shrink: 0;
-      margin-top: 8px;
+      margin-top: 2px;
     }
-    .recommend-item span {
+    .result-hero-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text-main);
+      letter-spacing: -.4px;
+    }
+    .result-hero-title em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .result-hero-sub {
       font-size: 14px;
       color: var(--text-sub);
       line-height: 1.65;
     }
-    .howtoeat-text {
-      font-size: 14px;
-      color: var(--text-sub);
-      line-height: 1.75;
+
+    /* 상품 카드 */
+    .result-card-wrap { padding: 16px 16px 0; }
+    .result-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-line);
+      overflow: hidden;
     }
 
-    /* 액션 버튼 */
+    .product-row {
+      display: flex;
+      min-height: 220px;
+    }
+    .product-img-col {
+      width: 46%;
+      flex-shrink: 0;
+      background: var(--beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+    .product-img-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 200px;
+    }
+    .product-info-col {
+      flex: 1;
+      padding: 16px 16px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .product-badge {
+      display: inline-block;
+      border: 1.5px solid var(--orange);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-bottom: 8px;
+      letter-spacing: .2px;
+    }
+    .product-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.4;
+      margin-bottom: 8px;
+      letter-spacing: -.3px;
+    }
+    .product-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .product-features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pf-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pf-icon-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--orange-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .pf-texts {}
+    .pf-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+    .pf-sub {
+      font-size: 11px;
+      color: var(--text-gray);
+      line-height: 1.3;
+    }
+
+    /* 추천 대상 */
+    .recommend-section {
+      margin: 16px 16px 0;
+      background: var(--orange-soft);
+      border: 1px solid var(--orange-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .recommend-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .rec-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 12.5px;
+      color: var(--text-sub);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+    .rec-check {
+      color: var(--orange);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* 액션 */
     .result-actions {
-      padding: 20px 16px;
+      padding: 20px 16px 0;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
     .btn-purchase {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       width: 100%;
       padding: 18px;
-      background: var(--green-dark);
+      background: var(--orange);
       color: var(--white);
       text-decoration: none;
       border-radius: var(--radius-md);
-      font-family: var(--font-head);
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
       text-align: center;
       transition: background .18s, transform .18s;
     }
-    .btn-purchase:active { transform: scale(.97); background: var(--green-deeper); }
+    .btn-purchase:active { transform: scale(.97); background: var(--orange-hover); }
 
     .btn-restart {
       width: 100%;
       padding: 16px;
       background: var(--white);
-      color: var(--green-dark);
-      border: 1.5px solid var(--green-border);
+      color: var(--text-main);
+      border: 1.5px solid var(--gray-line);
       border-radius: var(--radius-md);
-      font-family: var(--font-head);
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: all .18s;
     }
-    .btn-restart:active { transform: scale(.97); }
+    .btn-restart:active { transform: scale(.97); background: var(--beige); }
+
+    /* 공유 */
+    .share-section {
+      padding: 20px 16px 0;
+    }
+    .share-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .share-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+    .share-icon-circle {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: transform .15s;
+    }
+    .share-btn:active .share-icon-circle { transform: scale(.93); }
+    .share-icon-circle.kakao { background: #FEE500; }
+    .share-icon-circle.copy  { background: var(--beige-dark); }
+    .share-icon-circle.more  { background: var(--gray-line); }
+    .share-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    /* 복사 토스트 */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,.78);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 50px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      white-space: nowrap;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     .result-legal {
       text-align: center;
-      padding: 0 20px 44px;
+      padding: 20px 20px 44px;
       font-size: 11px;
       color: var(--text-gray);
       line-height: 1.75;
     }
 
     ::-webkit-scrollbar { display: none; }
-
-    @media (min-width: 480px) {
-      #app { box-shadow: 0 0 60px rgba(0,0,0,.10); }
-    }
+    @media (min-width: 480px) { #app { box-shadow: 0 0 60px rgba(0,0,0,.10); } }
   </style>
 </head>
 <body>
@@ -807,11 +679,6 @@
       <div class="brand-label">Lotte Mart Zetta</div>
       <h1 class="hero-title">나에게 딱 맞는<br><em>건강 잡곡</em>을<br>찾아보세요</h1>
       <p class="hero-sub">10가지 간단한 질문으로<br>맞춤 잡곡을 1분 안에 추천해드려요</p>
-      <div class="hero-deco">
-        <div class="hero-deco-circle">
-          <div class="hero-deco-inner"></div>
-        </div>
-      </div>
     </div>
 
     <div class="start-body">
@@ -843,9 +710,7 @@
   <div id="screen-quiz" class="screen">
     <div class="quiz-topbar">
       <button class="btn-back" onclick="goBack()">&#8592;</button>
-      <div class="quiz-counter">
-        <strong id="current-q">1</strong> / 10
-      </div>
+      <div class="quiz-counter"><strong id="current-q">1</strong> / 10</div>
       <div style="width:36px"></div>
     </div>
     <div class="progress-wrap">
@@ -887,9 +752,7 @@
   <!-- ③ 로딩 화면 -->
   <div id="screen-loading" class="screen">
     <div class="loading-ring"></div>
-    <div class="loading-dots">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="loading-dots"><span></span><span></span><span></span></div>
     <p class="loading-title">분석 중이에요</p>
     <p class="loading-sub">답변을 바탕으로 식습관을 분석하고 있어요</p>
     <div class="loading-steps">
@@ -902,35 +765,78 @@
   <!-- ④ 결과 화면 -->
   <div id="screen-result" class="screen">
 
-    <div class="result-header">
-      <div class="result-label">분석 완료!</div>
-      <h2 class="result-title">당신에게 추천하는<br>잡곡은 <em id="result-type-name">OOO</em>입니다</h2>
+    <!-- 상단 네비 -->
+    <div class="result-nav">
+      <button class="btn-back-result" onclick="restartQuiz()">&#8592;</button>
+      <span class="result-nav-title">나에게 맞는 잡곡 추천</span>
+      <div style="width:36px"></div>
     </div>
 
-    <!-- 추천 상품 카드 -->
+    <!-- 히어로 -->
+    <div class="result-hero">
+      <div class="result-check-wrap">
+        <div class="result-check-circle">✓</div>
+      </div>
+      <div class="result-hero-heading">
+        <span class="sparkle">✦</span>
+        <h2 class="result-hero-title">당신에게 <em>딱 맞는 잡곡</em>을<br>추천드려요!</h2>
+        <span class="sparkle">✦</span>
+      </div>
+      <p class="result-hero-sub">설문 결과를 바탕으로 영양과 건강 목표에 맞는<br>잡곡을 추천해드렸어요.</p>
+    </div>
+
+    <!-- 상품 카드 -->
     <div class="result-card-wrap">
       <div class="result-card">
-
-        <div class="product-image-area" id="product-image-area">
-          <div class="product-img-fallback">
-            <span id="product-fallback-text">상품 이미지</span>
+        <div class="product-row">
+          <div class="product-img-col" id="product-img-col">
+            <img id="result-product-img" src="" alt="" />
           </div>
-          <div class="product-badge">맞춤 추천</div>
+          <div class="product-info-col">
+            <div class="product-badge">추천 제품</div>
+            <div class="product-name" id="product-name">상품명</div>
+            <div class="product-desc" id="product-desc"></div>
+            <div class="product-features-list" id="product-features"></div>
+          </div>
         </div>
-
-        <div class="product-info">
-          <div class="product-name" id="product-name">상품명</div>
-        </div>
-
       </div>
+    </div>
+
+    <!-- 추천 대상 -->
+    <div class="recommend-section">
+      <div class="recommend-label">이런 분들께 추천해요</div>
+      <div class="recommend-grid" id="recommend-grid"></div>
     </div>
 
     <!-- 액션 버튼 -->
     <div class="result-actions">
-      <a class="btn-purchase" id="btn-purchase" href="https://lottemartzetta.com" target="_blank">
-        구매하기
+      <a class="btn-purchase" id="btn-purchase" href="#" target="_blank">
+        🛒 제품 구매하러 가기
       </a>
-      <button class="btn-restart" onclick="restartQuiz()">다시 분석하기</button>
+      <button class="btn-restart" onclick="restartQuiz()">🔄 다시 테스트하기</button>
+    </div>
+
+    <!-- 공유 -->
+    <div class="share-section">
+      <div class="share-title">친구에게 공유하기</div>
+      <div class="share-buttons">
+        <button class="share-btn" onclick="shareKakao()">
+          <div class="share-icon-circle kakao">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 2C6.03 2 2 5.36 2 9.5c0 2.67 1.69 5.02 4.27 6.38L5.2 19.5l4.3-2.84c.49.07.99.1 1.5.1 4.97 0 9-3.36 9-7.5S15.97 2 11 2z" fill="#3C1E1E"/>
+            </svg>
+          </div>
+          <span class="share-label">카카오톡</span>
+        </button>
+        <button class="share-btn" onclick="copyUrl()">
+          <div class="share-icon-circle copy">🔗</div>
+          <span class="share-label">URL 복사</span>
+        </button>
+        <button class="share-btn" onclick="shareMore()">
+          <div class="share-icon-circle more">⋯</div>
+          <span class="share-label">더보기</span>
+        </button>
+      </div>
     </div>
 
     <p class="result-legal">
@@ -938,213 +844,97 @@
       식습관 개선은 전문가와 상담 후 결정하세요.
     </p>
 
+    <!-- 토스트 -->
+    <div class="toast" id="toast"></div>
+
   </div>
 
 </div>
 
 <script>
-/* ════════════════════════════════════
-   데이터
-════════════════════════════════════ */
-const ANSWER_SCORES = [2, 1, 0, 0]; // 매우 그렇다, 그렇다, 아니다, 매우 아니다
+const ANSWER_SCORES = [2, 1, 0, 0];
 
 const QUESTIONS = [
-  {
-    category: '혈당',
-    text: "평소 혈당이나\n당뇨가 걱정되시나요?",
-    hint: "혈당 수치나 당뇨 관련 불편함이 신경 쓰이시나요?",
-    product: 'diabetes5',
-    type: '혈당 케어형',
-    typeDesc: '혈당 관리에 관심이 많은 건강 의식형 타입'
-  },
-  {
-    category: '혈당',
-    text: "밥 먹고 나면\n쉽게 졸리거나 나른해지시나요?",
-    hint: "식후에 눈이 무거워지거나 집중이 안 되시나요?",
-    product: 'diabetes5',
-    type: '식후 졸림형',
-    typeDesc: '식사 후 쉽게 피로감을 느끼는 타입'
-  },
-  {
-    category: '식습관',
-    text: "평소에\n단 음식을 좋아하시나요?",
-    hint: "초콜릿, 음료, 과자 등 달달한 것을 즐기시나요?",
-    product: 'lowsugar',
-    type: '달달 충전형',
-    typeDesc: '달콤한 간식이나 음료를 자주 찾는 타입'
-  },
-  {
-    category: '식습관',
-    text: "밀가루나 탄수화물\n음식을 자주 드시나요?",
-    hint: "빵, 면, 떡, 흰쌀밥 등을 즐겨 드시나요?",
-    product: 'lowsugar',
-    type: '탄수 러버형',
-    typeDesc: '밥·면·빵 위주의 식사를 즐기는 타입'
-  },
-  {
-    category: '소화',
-    text: "식사 후 속이\n자주 더부룩하신가요?",
-    hint: "배가 빵빵하거나 소화가 잘 안 되는 느낌이 드시나요?",
-    product: 'digestive',
-    type: '속편안 추구형',
-    typeDesc: '부담 없는 식사를 선호하는 예민한 타입'
-  },
-  {
-    category: '소화',
-    text: "채소를\n자주 못 드시나요?",
-    hint: "하루 식사에서 채소가 부족한 편이신가요?",
-    product: 'digestive',
-    type: '채소 미루기형',
-    typeDesc: '채소 섭취가 부족한 식습관의 타입'
-  },
-  {
-    category: '활력',
-    text: "쉽게 지치고\n활력이 부족하신가요?",
-    hint: "조금만 움직여도 피곤하거나 기운이 없으신가요?",
-    product: 'protein',
-    type: '체력 리필형',
-    typeDesc: '쉽게 지치고 에너지 보충이 필요한 타입'
-  },
-  {
-    category: '활력',
-    text: "식사가\n자주 불규칙하신가요?",
-    hint: "끼니를 자주 거르거나 식사 시간이 들쭉날쭉하신가요?",
-    product: 'protein',
-    type: '불규칙 식사형',
-    typeDesc: '식사 시간과 양이 자주 흔들리는 타입'
-  },
-  {
-    category: '나트륨',
-    text: "짠 음식이나 국물 요리를\n즐겨 드시나요?",
-    hint: "찌개, 국, 짠 반찬 등을 좋아하시나요?",
-    product: 'hypertension3',
-    type: '국물 마스터형',
-    typeDesc: '국물요리와 짭짤한 음식 선호도가 높은 타입'
-  },
-  {
-    category: '나트륨',
-    text: "몸이 자주\n붓는 느낌이 있으신가요?",
-    hint: "아침에 얼굴이나 손발이 자주 부으시나요?",
-    product: 'hypertension3',
-    type: '염분 폭발형',
-    typeDesc: '짜지 않으면 아쉬운 입맛을 가진 타입'
-  }
+  { category: '혈당', text: "평소 혈당이나\n당뇨가 걱정되시나요?", hint: "혈당 수치나 당뇨 관련 불편함이 신경 쓰이시나요?", product: 'diabetes5', type: '혈당 케어형', typeDesc: '혈당 관리에 관심이 많은 건강 의식형 타입' },
+  { category: '혈당', text: "밥 먹고 나면\n쉽게 졸리거나 나른해지시나요?", hint: "식후에 눈이 무거워지거나 집중이 안 되시나요?", product: 'diabetes5', type: '식후 졸림형', typeDesc: '식사 후 쉽게 피로감을 느끼는 타입' },
+  { category: '식습관', text: "평소에\n단 음식을 좋아하시나요?", hint: "초콜릿, 음료, 과자 등 달달한 것을 즐기시나요?", product: 'lowsugar', type: '달달 충전형', typeDesc: '달콤한 간식이나 음료를 자주 찾는 타입' },
+  { category: '식습관', text: "밀가루나 탄수화물\n음식을 자주 드시나요?", hint: "빵, 면, 떡, 흰쌀밥 등을 즐겨 드시나요?", product: 'lowsugar', type: '탄수 러버형', typeDesc: '밥·면·빵 위주의 식사를 즐기는 타입' },
+  { category: '소화', text: "식사 후 속이\n자주 더부룩하신가요?", hint: "배가 빵빵하거나 소화가 잘 안 되는 느낌이 드시나요?", product: 'digestive', type: '속편안 추구형', typeDesc: '부담 없는 식사를 선호하는 예민한 타입' },
+  { category: '소화', text: "채소를\n자주 못 드시나요?", hint: "하루 식사에서 채소가 부족한 편이신가요?", product: 'digestive', type: '채소 미루기형', typeDesc: '채소 섭취가 부족한 식습관의 타입' },
+  { category: '활력', text: "쉽게 지치고\n활력이 부족하신가요?", hint: "조금만 움직여도 피곤하거나 기운이 없으신가요?", product: 'protein', type: '체력 리필형', typeDesc: '쉽게 지치고 에너지 보충이 필요한 타입' },
+  { category: '활력', text: "식사가\n자주 불규칙하신가요?", hint: "끼니를 자주 거르거나 식사 시간이 들쭉날쭉하신가요?", product: 'protein', type: '불규칙 식사형', typeDesc: '식사 시간과 양이 자주 흔들리는 타입' },
+  { category: '나트륨', text: "짠 음식이나 국물 요리를\n즐겨 드시나요?", hint: "찌개, 국, 짠 반찬 등을 좋아하시나요?", product: 'hypertension3', type: '국물 마스터형', typeDesc: '국물요리와 짭짤한 음식 선호도가 높은 타입' },
+  { category: '나트륨', text: "몸이 자주\n붓는 느낌이 있으신가요?", hint: "아침에 얼굴이나 손발이 자주 부으시나요?", product: 'hypertension3', type: '염분 폭발형', typeDesc: '짜지 않으면 아쉬운 입맛을 가진 타입' }
 ];
 
 const PRODUCTS = {
   diabetes5: {
     name: "항당뇨 밸런스 5곡",
-    tags: ["#혈당 관리", "#5곡 블렌딩", "#발효 숙성"],
     url: "https://lottemartzetta.com",
-    image: "img-diabetes5.png",
-    nutritionPoints: [
-      { title: '혈당 관리', sub: '혈당 관리에 도움되는 곡물 구성' },
-      { title: '발효 숙성', sub: '특허 발효 숙성 공법' },
-      { title: '5곡 블렌딩', sub: '5가지 곡물 균형 배합' },
-      { title: '저당 설계', sub: '당류 최소화 설계' }
+    image: "img-diabetes.png",
+    desc: "5가지 곡물을 발효 숙성 공법으로 완성한, 혈당 관리 식단에 최적화된 건강 잡곡입니다.",
+    features: [
+      { icon: '🌾', title: '5곡 블렌딩', sub: '5가지 곡물 균형 배합' },
+      { icon: '🍃', title: '저당 설계', sub: '당류 최소화 설계' },
+      { icon: '🏺', title: '발효 숙성', sub: '특허 발효 숙성 공법' }
     ],
-    recommendedFor: [
-      '혈당 관리에 신경 쓰시는 분',
-      '식후 나른함이 자주 있으신 분',
-      '당뇨 예방 식단을 찾으시는 분'
-    ],
-    howToEat: '백미와 1:1 비율로 섞어 밥을 지으세요. 30분 불린 후 취사하면 더욱 부드럽게 완성돼요. 나물이나 된장국과 함께하면 더 풍부한 식사를 즐길 수 있어요.'
+    recommendedFor: ['혈당 관리에 신경 쓰시는 분', '식후 나른함이 자주 있으신 분', '당뇨 예방 식단을 찾으시는 분', '건강한 식습관을 시작하고 싶은 분']
   },
   lowsugar: {
     name: "저당 밸런스 더:오색현미",
-    tags: ["#5색 현미 블렌딩", "#발효 숙성 공법", "#국산 원료"],
     url: "https://lottemartzetta.com/products/OS8809191315502/details",
     image: "img-diabetes.png",
-    nutritionPoints: [
-      { title: '발효 숙성', sub: '특허 발효 숙성 공법' },
-      { title: '5색 현미', sub: '현미·찰현미·흑미·홍미·녹미' },
-      { title: '국산 100%', sub: '오색현미 단일 원료 구성' },
-      { title: '돼지감자 함유', sub: '돼지감자 추출액 포함' }
+    desc: "현미·찰현미·흑미·홍미·녹미 5색 현미를 한 번에 담아 저당 식단을 맛있게 완성해드려요.",
+    features: [
+      { icon: '🌈', title: '5색 현미 블렌딩', sub: '다양한 현미 균형 배합' },
+      { icon: '🥕', title: '돼지감자 함유', sub: '돼지감자 추출액 포함' },
+      { icon: '🏺', title: '발효 숙성', sub: '특허 발효 숙성 공법' }
     ],
-    recommendedFor: [
-      '탄수화물 위주 식사를 하시는 분',
-      '단 음식을 자주 찾으시는 분',
-      '처음 잡곡을 시작하시는 분'
-    ],
-    howToEat: '백미와 1:1 비율로 섞어 밥을 지으세요. 30분 불린 후 취사하면 더욱 부드럽게 완성돼요. 나물이나 된장국과 함께하면 더 풍부한 식사를 즐길 수 있어요.'
+    recommendedFor: ['탄수화물 위주 식사를 하시는 분', '단 음식을 자주 찾으시는 분', '처음 잡곡을 시작하시는 분', '국산 원료를 선호하시는 분']
   },
   digestive: {
     name: "속편한 밸런스 숙성 찰진8곡",
-    tags: ["#발효 숙성 공법", "#불릴 필요 없음", "#국산 100%"],
     url: "https://lottemartzetta.com/products/OS8809191315526/details",
     image: "img-digestive.png",
-    nutritionPoints: [
-      { title: '발효 숙성', sub: '특허 발효 숙성 공법' },
-      { title: '간편 조리', sub: '불릴 필요 없음' },
-      { title: '국산 100%', sub: '국내산 찹쌀·현미 외 8가지' },
-      { title: '찰진 식감', sub: '찰기 강화 블렌딩 방식' }
+    desc: "발효 숙성 공법으로 소화 편안함을 높인, 불릴 필요 없이 간편하게 즐기는 찰진 잡곡입니다.",
+    features: [
+      { icon: '🌿', title: '소화 편안', sub: '발효 숙성 공법' },
+      { icon: '⏱️', title: '간편 조리', sub: '불릴 필요 없음' },
+      { icon: '🌾', title: '찰진 식감', sub: '찰기 강화 블렌딩' }
     ],
-    recommendedFor: [
-      '식사 후 속이 더부룩한 느낌이 있으신 분',
-      '소화가 편안한 식사를 원하시는 분',
-      '채소 섭취가 부족하신 분'
-    ],
-    howToEat: '밥물을 평소보다 약간 적게 넣으면 더 쫀득한 식감을 즐길 수 있어요. 김치나 된장 등 발효 음식과 함께 드시면 더욱 풍부하게 즐길 수 있어요.'
+    recommendedFor: ['식사 후 속이 더부룩한 느낌이 있으신 분', '소화가 편안한 식사를 원하시는 분', '채소 섭취가 부족하신 분', '간편하게 잡곡밥을 즐기고 싶은 분']
   },
   protein: {
     name: "프로틴 밸런스 더:고단백 11곡",
-    tags: ["#단백질 19.5g", "#발효 숙성 공법", "#불릴 필요 없음"],
     url: "https://lottemartzetta.com/products/OS8809191315496/details",
     image: "img-protein.png",
-    nutritionPoints: [
-      { title: '고단백', sub: '단백질 19.5g (100g당)' },
-      { title: '발효 숙성', sub: '특허 발효 숙성 공법' },
-      { title: '간편 조리', sub: '불릴 필요 없음' },
-      { title: '11곡 블렌딩', sub: '렌틸콩·병아리콩 포함' }
+    desc: "11가지 곡물과 콩을 최적의 비율로 배합해 단백질과 식이섬유, 영양 밸런스를 균형 있게 채워드려요.",
+    features: [
+      { icon: '💪', title: '고단백 곡물 설계', sub: '단백질 보충에 도움' },
+      { icon: '🌾', title: '11가지 곡물 & 콩', sub: '영양 밸런스 최적화' },
+      { icon: '🍚', title: '찰지고 부드러운 식감', sub: '맛있고 소화가 편안해요' }
     ],
-    recommendedFor: [
-      '피로가 잦고 활력이 부족하신 분',
-      '단백질 섭취가 부족하다고 느끼시는 분',
-      '규칙적인 식사로 체력 관리를 원하시는 분'
-    ],
-    howToEat: '계란, 두부, 닭가슴살 등 단백질 반찬과 함께 드시면 더욱 좋아요. 국물 요리와 함께 먹으면 포만감이 오래 유지돼요.'
+    recommendedFor: ['단백질 섭취를 늘리고 싶은 분', '건강한 식습관을 원하시는 분', '활력 있는 하루를 만들고 싶은 분', '맛있고 든든한 잡곡밥을 찾는 분']
   },
   hypertension3: {
     name: "항고혈압 밸런스 3곡",
-    tags: ["#나트륨 관리", "#3곡 블렌딩", "#혈압 케어"],
     url: "https://lottemartzetta.com",
-    image: "img-hypertension3.png",
-    nutritionPoints: [
-      { title: '나트륨 관리', sub: '나트륨 걱정 없는 곡물 구성' },
-      { title: '칼륨 함유', sub: '나트륨 배출을 돕는 성분' },
-      { title: '3곡 블렌딩', sub: '3가지 핵심 곡물 집중 배합' },
-      { title: '혈압 케어', sub: '혈압 관리를 위한 설계' }
+    image: "img-diabetes.png",
+    desc: "나트륨 걱정 없이 즐기는 3가지 핵심 곡물 집중 배합, 혈압 관리 식단에 잘 어울리는 잡곡입니다.",
+    features: [
+      { icon: '💧', title: '나트륨 관리', sub: '나트륨 걱정 없는 곡물' },
+      { icon: '🌿', title: '칼륨 함유', sub: '나트륨 배출을 돕는 성분' },
+      { icon: '🌾', title: '3곡 블렌딩', sub: '핵심 곡물 집중 배합' }
     ],
-    recommendedFor: [
-      '짠 음식을 즐겨 드시는 분',
-      '몸이 자주 부으시는 분',
-      '혈압이 걱정되시는 분'
-    ],
-    howToEat: '백미와 1:1 비율로 섞어 밥을 지으세요. 담백하고 가벼운 반찬과 함께 드시면 더욱 잘 어울려요.'
+    recommendedFor: ['짠 음식을 즐겨 드시는 분', '몸이 자주 부으시는 분', '혈압이 걱정되시는 분', '담백한 식사를 선호하시는 분']
   }
 };
 
-const GRAPH_CATEGORIES = [
-  { label: '당·탄수 균형', icon: '🍚', qIdxs: [0, 1, 2, 3] },
-  { label: '소화 건강',      icon: '🫙', qIdxs: [4, 5] },
-  { label: '활력·단백질',   icon: '⚡', qIdxs: [6, 7] },
-  { label: '나트륨 균형',   icon: '💧', qIdxs: [8, 9] }
-];
+let currentQ = 0, answers = [], selectedAnswerIndex = null;
 
-/* ════════════════════════════════════
-   상태
-════════════════════════════════════ */
-let currentQ = 0;
-let answers = [];
-let selectedAnswerIndex = null;
-
-/* ════════════════════════════════════
-   화면 전환
-════════════════════════════════════ */
 function showScreen(targetId, fromId) {
   const from = document.getElementById(fromId);
   const to   = document.getElementById(targetId);
-
   if (from) {
     from.style.transition = 'opacity .3s ease, transform .3s ease';
     from.style.opacity = '0';
@@ -1165,13 +955,8 @@ function showScreen(targetId, fromId) {
   }
 }
 
-/* ════════════════════════════════════
-   퀴즈 시작
-════════════════════════════════════ */
 function startQuiz() {
-  currentQ = 0;
-  answers = [];
-  selectedAnswerIndex = null;
+  currentQ = 0; answers = []; selectedAnswerIndex = null;
   renderQuestion();
   showScreen('screen-quiz', 'screen-start');
 }
@@ -1179,74 +964,45 @@ function startQuiz() {
 function renderQuestion() {
   const q = QUESTIONS[currentQ];
   selectedAnswerIndex = (answers[currentQ] !== undefined) ? answers[currentQ] : null;
-
   document.getElementById('current-q').textContent = currentQ + 1;
   document.getElementById('q-category').textContent = q.category;
   document.getElementById('question-text').textContent = q.text;
   document.getElementById('question-hint').textContent = q.hint;
-
   const pct = ((currentQ + 1) / QUESTIONS.length) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
-
-  document.querySelectorAll('.btn-answer').forEach((btn, i) => {
-    btn.classList.toggle('selected', i === selectedAnswerIndex);
-  });
-
+  document.querySelectorAll('.btn-answer').forEach((btn, i) => btn.classList.toggle('selected', i === selectedAnswerIndex));
   document.getElementById('btn-next').classList.toggle('enabled', selectedAnswerIndex !== null);
 }
 
-/* ════════════════════════════════════
-   답변 선택
-════════════════════════════════════ */
 function selectAnswer(index) {
   selectedAnswerIndex = index;
-  document.querySelectorAll('.btn-answer').forEach((btn, i) => {
-    btn.classList.toggle('selected', i === index);
-  });
+  document.querySelectorAll('.btn-answer').forEach((btn, i) => btn.classList.toggle('selected', i === index));
   document.getElementById('btn-next').classList.add('enabled');
 }
 
-/* ════════════════════════════════════
-   다음 질문
-════════════════════════════════════ */
 function nextQuestion() {
   if (selectedAnswerIndex === null) return;
-
   answers[currentQ] = selectedAnswerIndex;
-
   if (currentQ < QUESTIONS.length - 1) {
     currentQ++;
     const body = document.querySelector('.quiz-body');
-    body.style.opacity = '0';
-    body.style.transform = 'translateX(-16px)';
-    body.style.transition = 'all .18s ease';
+    body.style.opacity = '0'; body.style.transform = 'translateX(-16px)'; body.style.transition = 'all .18s ease';
     setTimeout(() => {
       renderQuestion();
-      body.style.transform = 'translateX(16px)';
-      body.style.opacity = '0';
-      setTimeout(() => {
-        body.style.transition = 'all .28s ease';
-        body.style.transform = 'translateX(0)';
-        body.style.opacity = '1';
-      }, 40);
+      body.style.transform = 'translateX(16px)'; body.style.opacity = '0';
+      setTimeout(() => { body.style.transition = 'all .28s ease'; body.style.transform = 'translateX(0)'; body.style.opacity = '1'; }, 40);
     }, 180);
   } else {
     showLoading();
   }
 }
 
-/* ════════════════════════════════════
-   뒤로 가기
-════════════════════════════════════ */
 function goBack() {
   if (currentQ === 0) { showScreen('screen-start', 'screen-quiz'); return; }
   currentQ--;
   renderQuestion();
 }
 
-/* ════════════════════════════════════
-   로딩
-════════════════════════════════════ */
 function showLoading() {
   showScreen('screen-loading', 'screen-quiz');
   setTimeout(() => document.getElementById('ls1').classList.add('show'), 300);
@@ -1255,77 +1011,103 @@ function showLoading() {
   setTimeout(() => showResult(), 2800);
 }
 
-/* ════════════════════════════════════
-   결과 표시
-════════════════════════════════════ */
 function showResult() {
-  // 1. 제품별 점수 계산
   const productScores = { diabetes5: 0, lowsugar: 0, digestive: 0, protein: 0, hypertension3: 0 };
-  QUESTIONS.forEach((q, idx) => {
-    productScores[q.product] += (ANSWER_SCORES[answers[idx]] || 0);
-  });
+  QUESTIONS.forEach((q, idx) => { productScores[q.product] += (ANSWER_SCORES[answers[idx]] || 0); });
 
-  // 2. 최고 점수 제품 결정
-  let recommended = 'digestive';
-  let maxScore = -1;
-  Object.entries(productScores).forEach(([key, val]) => {
-    if (val > maxScore) { maxScore = val; recommended = key; }
-  });
+  let recommended = 'digestive', maxScore = -1;
+  Object.entries(productScores).forEach(([key, val]) => { if (val > maxScore) { maxScore = val; recommended = key; } });
   const topProducts = Object.entries(productScores).filter(([, v]) => v === maxScore);
   if (topProducts.length > 1) recommended = 'digestive';
 
-  // 3. 유형명 결정 (해당 제품의 두 질문 중 더 높은 쪽)
-  const pairIdxs = QUESTIONS.reduce((acc, q, idx) => {
-    if (!acc[q.product]) acc[q.product] = [];
-    acc[q.product].push(idx);
-    return acc;
-  }, {});
-  const pair = pairIdxs[recommended];
-  const s0 = ANSWER_SCORES[answers[pair[0]]] || 0;
-  const s1 = ANSWER_SCORES[answers[pair[1]]] || 0;
-  const dominantIdx = s0 >= s1 ? pair[0] : pair[1];
-  const typeName = QUESTIONS[dominantIdx].type;
-  const typeDesc = QUESTIONS[dominantIdx].typeDesc;
-
-  // 4. 헤더 — 상품명 삽입
   const prod = PRODUCTS[recommended];
-  document.getElementById('result-type-name').textContent = prod.name;
 
-  // 5. 상품 이미지·정보
-  const imgArea = document.getElementById('product-image-area');
-  imgArea.innerHTML = `
-    <img src="${prod.image}" alt="${prod.name}"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="product-img-fallback" style="display:none"><span>${prod.name}</span></div>
-    <div class="product-badge">맞춤 추천</div>
-  `;
+  // 이미지
+  const img = document.getElementById('result-product-img');
+  img.src = prod.image;
+  img.alt = prod.name;
+  img.onerror = () => { img.style.display = 'none'; };
+
+  // 상품 정보
   document.getElementById('product-name').textContent = prod.name;
+  document.getElementById('product-desc').textContent = prod.desc;
 
-  // 6. 구매 버튼
+  // 특징 아이템
+  document.getElementById('product-features').innerHTML = prod.features.map(f => `
+    <div class="pf-item">
+      <div class="pf-icon-circle">${f.icon}</div>
+      <div class="pf-texts">
+        <div class="pf-title">${f.title}</div>
+        <div class="pf-sub">${f.sub}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // 추천 대상
+  document.getElementById('recommend-grid').innerHTML = prod.recommendedFor.map(r => `
+    <div class="rec-item"><span class="rec-check">✓</span>${r}</div>
+  `).join('');
+
+  // 구매 링크
   document.getElementById('btn-purchase').href = prod.url;
 
   ['ls1','ls2','ls3'].forEach(id => document.getElementById(id).classList.remove('show'));
-
   showScreen('screen-result', 'screen-loading');
   setTimeout(() => { document.getElementById('screen-result').scrollTop = 0; }, 400);
 }
 
-/* ════════════════════════════════════
-   아코디언
-════════════════════════════════════ */
-function toggleAccordion(id) {
-  const header = document.getElementById('acc-' + id + '-header');
-  const body   = document.getElementById('acc-' + id + '-body');
-  const isOpen = body.classList.contains('open');
-  header.classList.toggle('open', !isOpen);
-  body.classList.toggle('open', !isOpen);
-}
-
-/* ════════════════════════════════════
-   다시 시작
-════════════════════════════════════ */
 function restartQuiz() {
   showScreen('screen-start', 'screen-result');
+}
+
+/* ━━━━ 공유 기능 ━━━━ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function shareKakao() {
+  const url = location.href;
+  const prodName = document.getElementById('product-name').textContent;
+  const text = `나에게 딱 맞는 잡곡은 "${prodName}"! 나도 테스트해봐 👉 ${url}`;
+  if (navigator.share) {
+    navigator.share({ title: '나에게 맞는 잡곡 추천', text, url })
+      .catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('카카오톡에 붙여넣기 해보세요! 링크 복사됨');
+    });
+  }
+}
+
+function copyUrl() {
+  const url = location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('링크가 복사되었어요 ✓');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('링크가 복사되었어요 ✓');
+  });
+}
+
+function shareMore() {
+  const prodName = document.getElementById('product-name').textContent;
+  const url = location.href;
+  if (navigator.share) {
+    navigator.share({
+      title: '나에게 맞는 잡곡 추천',
+      text: `나에게 딱 맞는 잡곡은 "${prodName}"! 나도 테스트해봐 👉`,
+      url
+    }).catch(() => {});
+  } else {
+    copyUrl();
+  }
 }
 </script>
 </body>
