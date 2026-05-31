@@ -906,7 +906,7 @@ const PRODUCTS = {
   diabetes5: {
     name: "당케어 밸런스 항당뇨 밸런스 5곡",
     certDesc: "본 제품은 농촌진흥청의 기술(10-2474858)을 이전받아 청그루에서 생산한 제품입니다.",
-    desc: "혈당 걱정되는 분을 위해 특화된 5가지 잡곡 블렌드",
+    desc: null,
     reason: "혈당이 신경 쓰이거나 식후 나른함이 잦은 생활습관에 맞게 추천됐어요. 농촌진흥청의 특허 기술로 만들어 실제로 당뇨에 도움이 돼요. 평소 당뇨 걱정이 있거나 예방하고 싶은 분들께 추천해요.",
     features: [
       { text: "공복혈당 22.5% 감소, 경구 포도당 부하 수치 15.5% 감소 효과가 있어요.", footnote: "*농촌진흥청 보도 자료, 당뇨를 유도한 쥐에게 2주간 섭취시켰을 때 결과" },
@@ -955,7 +955,7 @@ const PRODUCTS = {
   hypertension3: {
     name: "혈압케어 밸런스 항고혈압 밸런스 3곡",
     certDesc: "본 제품은 농촌진흥청의 기술(10-2474858)을 이전받아 청그루에서 생산한 제품입니다.",
-    desc: "나트륨 걱정 줄여주는 혈압 케어 잡곡",
+    desc: null,
     reason: "짠 음식을 자주 드시거나 몸이 자주 붓는 생활습관에 맞게 추천됐어요. 농촌진흥청 특허 기술로 만들어 실제로 고혈압에 도움이 돼요. 평소 혈압 걱정이 있거나 예방하고 싶은 분들께 추천해요.",
     features: [
       "ACE(혈압 상승 억제 효소) 억제율이 39%로 고혈압에 도움을 줘요.",
@@ -1087,7 +1087,9 @@ function showResult() {
     certEl.style.display = 'none';
   }
 
-  document.getElementById('product-desc').textContent = prod.desc;
+  const descEl = document.getElementById('product-desc');
+  if (prod.desc) { descEl.textContent = prod.desc; descEl.style.display = ''; }
+  else { descEl.style.display = 'none'; }
   document.getElementById('product-features').innerHTML =
     prod.features.map(f => {
       if (typeof f === 'object') {
