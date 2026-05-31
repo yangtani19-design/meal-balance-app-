@@ -367,7 +367,7 @@
        LOADING SCREEN
     ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     #screen-loading {
-      background: linear-gradient(155deg, #3D1F0A 0%, #7A3D14 50%, #C06020 100%);
+      background: linear-gradient(155deg, #F5A04A 0%, #F08030 50%, #E8742A 100%);
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -1095,7 +1095,7 @@ function showResult() {
       if (typeof f === 'object') {
         return `<li>
           <span class="feat-icon">✓</span>
-          <span>${f.text} <small class="feat-footnote">${f.footnote}</small></span>
+          <span>${f.text}<br><small class="feat-footnote">${f.footnote}</small></span>
         </li>`;
       }
       return `<li><span class="feat-icon">✓</span><span>${f}</span></li>`;
