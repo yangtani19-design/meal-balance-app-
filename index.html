@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>나에게 맞는 건강 잡곡 찾기</title>
+  <title>나에게 맞는 건강 잡곡 찾기 | 롯데마트 제타</title>
+  <meta name="description" content="10가지 생활습관 질문으로 나에게 딱 맞는 롯데마트 제타 건강 잡곡을 추천해 드려요." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="나에게 맞는 건강 잡곡 찾기 | 롯데마트 제타" />
+  <meta property="og:description" content="10가지 생활습관 질문으로 나에게 딱 맞는 롯데마트 제타 건강 잡곡을 추천해 드려요." />
+  <meta property="og:image" content="이미지/첫페이지.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="ko_KR" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1029,9 +1037,19 @@ function showResult() {
   const scores = { diabetes5:0, lowsugar:0, digestive:0, protein:0, hypertension3:0 };
   QUESTIONS.forEach((q, i) => { scores[q.product] += (ANSWER_SCORES[answers[i]] || 0); });
 
-  let recommended = 'digestive', maxScore = -1;
-  Object.entries(scores).forEach(([k, v]) => { if (v > maxScore) { maxScore = v; recommended = k; } });
-  if (Object.entries(scores).filter(([,v]) => v === maxScore).length > 1) recommended = 'digestive';
+  const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+  let recommended, overrideReason = null;
+
+  if (totalScore === 0) {
+    const keys = Object.keys(PRODUCTS);
+    recommended = keys[Math.floor(Math.random() * keys.length)];
+    overrideReason = "지금도 충분히 건강한 식습관을 가지고 계세요! 더 건강한 하루를 위해, 균형 잡힌 곡물을 추천드려요.";
+  } else {
+    recommended = 'digestive';
+    let maxScore = -1;
+    Object.entries(scores).forEach(([k, v]) => { if (v > maxScore) { maxScore = v; recommended = k; } });
+    if (Object.entries(scores).filter(([,v]) => v === maxScore).length > 1) recommended = 'digestive';
+  }
 
   /* 2. 제품 카드 채우기 */
   const prod = PRODUCTS[recommended];
@@ -1053,7 +1071,7 @@ function showResult() {
       </li>`).join('');
 
   /* 3. 추천 이유 */
-  document.getElementById('product-reason').textContent = prod.reason || '';
+  document.getElementById('product-reason').textContent = overrideReason || prod.reason || '';
 
   /* 4. 구매 버튼 */
   const btnPurchase = document.getElementById('btn-purchase');
