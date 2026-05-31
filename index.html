@@ -512,8 +512,7 @@
       font-size: 10px;
       color: #aaa;
       line-height: 1.4;
-      display: block;
-      margin-top: 2px;
+      display: inline;
     }
     .product-desc {
       font-size: 14px;
@@ -1096,7 +1095,7 @@ function showResult() {
       if (typeof f === 'object') {
         return `<li>
           <span class="feat-icon">✓</span>
-          <span>${f.text}<br><small class="feat-footnote">${f.footnote}</small></span>
+          <span>${f.text} <small class="feat-footnote">${f.footnote}</small></span>
         </li>`;
       }
       return `<li><span class="feat-icon">✓</span><span>${f}</span></li>`;
