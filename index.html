@@ -1161,7 +1161,8 @@ function showResult() {
     recommended = 'digestive';
     let maxScore = -1;
     Object.entries(scores).forEach(([k, v]) => { if (v > maxScore) { maxScore = v; recommended = k; } });
-    if (Object.entries(scores).filter(([,v]) => v === maxScore).length > 1) recommended = 'diabetes5';
+    const tied = Object.entries(scores).filter(([,v]) => v === maxScore).map(([k]) => k);
+    if (tied.length > 1) recommended = tied[Math.floor(Math.random() * tied.length)];
   }
 
   /* 2. 제품 카드 채우기 */
